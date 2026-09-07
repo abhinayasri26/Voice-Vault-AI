@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Record Voice - Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🎙️ Voice Vault AI
+        </div>
+
+        <div class="nav-right">
+
+            <a href="{{ url_for('dashboard') }}"
+               class="back-btn">
+                ← Dashboard
+            </a>
+
+            <button
+                onclick="toggleDarkMode()"
+                class="dark-btn"
+                id="darkModeBtn">
+                🌙
+            </button>
+
+            <a href="{{ url_for('logout') }}"
+               class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="record-container">
+
+        <div class="record-box">
+
+            <h1>🎙️ Create Voice Note</h1>
+
+            <p>
+                Record your voice and save it as an organized note.
+            </p>
+
+
+            <!-- ================= MICROPHONE ================= -->
+
+            <div class="mic-area">
+
+                <div class="mic-circle" id="micCircle">
+                    🎙️
+                </div>
+
+                <div id="status">
+                    Click Start Recording
+                </div>
+
+            </div>
+
+
+            <!-- ================= RECORD BUTTONS ================= -->
+
+            <div class="record-buttons">
+
+                <button
+                    type="button"
+                    class="start-btn"
+                    id="startBtn"
+                    onclick="startRecording()">
+
+                    🎙️ Start Recording
+
+                </button>
+
+                <button
+                    type="button"
+                    class="stop-btn"
+                    id="stopBtn"
+                    onclick="stopRecording()"
+                    disabled>
+
+                    ■ Stop
+
+                </button>
+
+            </div>
+
+
+            <!-- ================= NOTE FORM ================= -->
+
+            <form
+                action="{{ url_for('save_note') }}"
+                method="POST"
+                id="noteForm">
+
+
+                <!-- TITLE -->
+
+                <label for="title">
+                    📝 Note Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Enter note title..."
+                    required>
+
+
+                <!-- LANGUAGE -->
+
+                <label for="language">
+                    🌐 Speech Language
+                </label>
+
+                <select
+                    id="language"
+                    name="language">
+
+                    <option value="en-IN">
+                        🇮🇳 English (India)
+                    </option>
+
+                    <option value="te-IN">
+                        🇮🇳 Telugu
+                    </option>
+
+                    <option value="hi-IN">
+                        🇮🇳 Hindi
+                    </option>
+
+                </select>
+
+
+                <!-- TRANSCRIPT -->
+
+                <label for="content">
+                    📄 Voice Note / Transcript
+                </label>
+
+                <textarea
+                    id="content"
+                    name="content"
+                    placeholder="Your recorded speech will appear here..."></textarea>
+
+
+                <!-- CATEGORY -->
+
+                <label for="category">
+                    📂 Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category">
+
+                    <option value="General">
+                        General
+                    </option>
+
+                    <option value="Study">
+                        Study
+                    </option>
+
+                    <option value="Project">
+                        Project
+                    </option>
+
+                    <option value="Meeting">
+                        Meeting
+                    </option>
+
+                    <option value="Personal">
+                        Personal
+                    </option>
+
+                    <option value="Work">
+                        Work
+                    </option>
+
+                    <option value="Ideas">
+                        Ideas
+                    </option>
+
+                    <option value="Reminder">
+                        Reminder
+                    </option>
+
+                </select>
+
+
+                <!-- PRIORITY -->
+
+                <label for="priority">
+                    ⚡ Priority
+                </label>
+
+                <select
+                    id="priority"
+                    name="priority">
+
+                    <option value="Low">
+                        🟢 Low
+                    </option>
+
+                    <option value="Medium" selected>
+                        🟡 Medium
+                    </option>
+
+                    <option value="High">
+                        🔴 High
+                    </option>
+
+                </select>
+
+
+                <!-- SAVE -->
+
+                <button
+                    type="submit"
+                    class="save-btn">
+
+                    💾 Save Voice Note
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <!-- GLOBAL JS -->
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+    <!-- ================= SPEECH RECOGNITION ================= -->
+
+    <script>
+
+        let recognition;
+
+        let isRecording = false;
+
+
+        /* ==========================================
+           BROWSER SPEECH RECOGNITION
+        ========================================== */
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+
+        /* ==========================================
+           GET LANGUAGE
+        ========================================== */
+
+        function getSelectedLanguage() {
+
+            return document.getElementById("language").value;
+
+        }
+
+
+        /* ==========================================
+           CREATE SPEECH RECOGNITION
+        ========================================== */
+
+        if (SpeechRecognition) {
+
+            recognition = new SpeechRecognition();
+
+            recognition.continuous = true;
+
+            recognition.interimResults = true;
+
+
+            /* Default language */
+
+            recognition.lang = "en-IN";
+
+
+            /* ======================================
+               RECORDING START
+            ====================================== */
+
+            recognition.onstart = function () {
+
+                isRecording = true;
+
+                document.getElementById("status").innerText =
+                    "🔴 Recording... Speak now";
+
+                document
+                    .getElementById("micCircle")
+                    .classList.add("recording");
+
+                document.getElementById("startBtn").disabled = true;
+
+                document.getElementById("stopBtn").disabled = false;
+
+            };
+
+
+            /* ======================================
+               SPEECH RESULT
+            ====================================== */
+
+            recognition.onresult = function (event) {
+
+                let finalTranscript = "";
+
+
+                for (
+                    let i = event.resultIndex;
+                    i < event.results.length;
+                    i++
+                ) {
+
+                    const transcript =
+                        event.results[i][0].transcript;
+
+
+                    if (event.results[i].isFinal) {
+
+                        finalTranscript += transcript + " ";
+
+                    }
+
+                }
+
+
+                if (finalTranscript !== "") {
+
+                    const content =
+                        document.getElementById("content");
+
+
+                    content.value +=
+                        finalTranscript;
+
+                }
+
+            };
+
+
+            /* ======================================
+               ERROR
+            ====================================== */
+
+            recognition.onerror = function (event) {
+
+                console.log(
+                    "Speech recognition error:",
+                    event.error
+                );
+
+
+                document.getElementById("status").innerText =
+                    "⚠️ " + event.error;
+
+
+                resetRecordingUI();
+
+            };
+
+
+            /* ======================================
+               RESTART AFTER END
+            ====================================== */
+
+            recognition.onend = function () {
+
+                if (isRecording) {
+
+                    try {
+
+                        recognition.start();
+
+                    }
+
+                    catch (error) {
+
+                        console.log(error);
+
+                    }
+
+                }
+
+            };
+
+        }
+
+
+        /* ==========================================
+           START RECORDING
+        ========================================== */
+
+        function startRecording() {
+
+            if (!SpeechRecognition) {
+
+                alert(
+                    "Speech recognition is not supported. Please use Google Chrome."
+                );
+
+                return;
+
+            }
+
+
+            /* Get selected language */
+
+            const selectedLanguage =
+                getSelectedLanguage();
+
+
+            /* Set selected language */
+
+            recognition.lang =
+                selectedLanguage;
+
+
+            try {
+
+                recognition.start();
+
+            }
+
+            catch (error) {
+
+                console.log(error);
+
+            }
+
+        }
+
+
+        /* ==========================================
+           STOP RECORDING
+        ========================================== */
+
+        function stopRecording() {
+
+            isRecording = false;
+
+
+            if (recognition) {
+
+                recognition.stop();
+
+            }
+
+
+            resetRecordingUI();
+
+        }
+
+
+        /* ==========================================
+           RESET RECORDING UI
+        ========================================== */
+
+        function resetRecordingUI() {
+
+            document.getElementById("status").innerText =
+                "Recording stopped. You can edit the transcript.";
+
+
+            document
+                .getElementById("micCircle")
+                .classList.remove("recording");
+
+
+            document.getElementById("startBtn").disabled =
+                false;
+
+
+            document.getElementById("stopBtn").disabled =
+                true;
+
+        }
+
+
+        /* ==========================================
+           FORM VALIDATION
+        ========================================== */
+
+        document
+            .getElementById("noteForm")
+            .addEventListener(
+                "submit",
+                function(event) {
+
+                    const content =
+                        document
+                        .getElementById("content")
+                        .value
+                        .trim();
+
+
+                    if (content === "") {
+
+                        event.preventDefault();
+
+
+                        alert(
+                            "Please record something or enter note content."
+                        );
+
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

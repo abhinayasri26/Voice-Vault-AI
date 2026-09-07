@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ note.title }} | Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎙️ Voice Vault AI
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('notes') }}"
+           class="back-btn">
+            Notes
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="view-container">
+
+    <div class="full-note">
+
+        <div class="big-note-icon">
+            📝
+        </div>
+
+        <h1>
+            {{ note.title }}
+        </h1>
+
+
+        <div class="note-details">
+
+            <span>
+                🏷️ {{ note.category }}
+            </span>
+
+            <span>
+                ⚡ {{ note.priority }}
+            </span>
+
+        </div>
+
+
+        <hr>
+
+
+        <h3>
+            🤖 AI Summary
+        </h3>
+
+        <p class="full-content">
+            {{ note.summary or "No summary available." }}
+        </p>
+
+
+        <hr>
+
+
+        <h3>
+            🔑 Keywords
+        </h3>
+
+        <p class="full-content">
+            {{ note.keywords or "No keywords extracted." }}
+        </p>
+
+
+        <hr>
+
+
+        <h3>
+            📝 Full Transcript
+        </h3>
+
+        <p class="full-content">
+            {{ note.content }}
+        </p>
+
+
+        <div class="view-actions">
+
+            <a
+                href="{{ url_for('export_txt', note_id=note.id) }}"
+                class="view-btn">
+
+                📄 Export TXT
+
+            </a>
+
+
+            <a
+                href="{{ url_for('export_pdf', note_id=note.id) }}"
+                class="view-btn">
+
+                📥 Export PDF
+
+            </a>
+
+
+            <a
+                href="{{ url_for('delete_note', note_id=note.id) }}"
+                class="delete-btn"
+                onclick="return confirm('Delete this note?');">
+
+                🗑️ Delete
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

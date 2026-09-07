@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>To-Do List | Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎙️ Voice Vault AI
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="back-btn">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="tasks-container">
+
+    <div class="tasks-header">
+
+        <h1>
+            ✅ My To-Do List
+        </h1>
+
+        <p>
+            Manage your tasks, date, time and reminders
+        </p>
+
+    </div>
+
+
+    <!-- ADD TASK -->
+
+    <div class="task-form-box">
+
+        <h2>
+            ➕ Add New Task
+        </h2>
+
+        <form
+            action="{{ url_for('add_task') }}"
+            method="POST">
+
+            <label>
+                Task Name
+            </label>
+
+            <input
+                type="text"
+                name="task"
+                placeholder="Enter task..."
+                required
+            >
+
+
+            <div class="task-row">
+
+                <div>
+
+                    <label>
+                        📅 Due Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="due_date"
+                        required
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        ⏰ Due Time
+                    </label>
+
+                    <input
+                        type="time"
+                        name="due_time"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <label>
+                ⚡ Priority
+            </label>
+
+            <select name="priority">
+
+                <option value="High">
+                    High
+                </option>
+
+                <option value="Medium" selected>
+                    Medium
+                </option>
+
+                <option value="Low">
+                    Low
+                </option>
+
+            </select>
+
+
+            <label class="checkbox-label">
+
+                <input
+                    type="checkbox"
+                    name="reminder"
+                >
+
+                🔔 Enable Reminder
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="add-task-btn">
+
+                + Add Task
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- TASK LIST -->
+
+    <div class="task-list">
+
+        <h2>
+            📋 Your Tasks
+        </h2>
+
+
+        {% if tasks %}
+
+            {% for task in tasks %}
+
+            <div class="task-card
+                {% if task.status == 'Completed' %}
+                completed-task
+                {% endif %}">
+
+                <div class="task-main">
+
+                    <div class="task-check">
+
+                        {% if task.status == "Completed" %}
+                            ☑️
+                        {% else %}
+                            ☐
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+                            {{ task.task }}
+                        </h3>
+
+                        <div class="task-info">
+
+                            {% if task.due_date %}
+                                📅 {{ task.due_date }}
+                            {% endif %}
+
+                            {% if task.due_time %}
+                                &nbsp;&nbsp;
+                                ⏰ {{ task.due_time }}
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-meta">
+
+                    <span class="priority {{ task.priority|lower }}">
+
+                        ⚡ {{ task.priority }}
+
+                    </span>
+
+
+                    {% if task.reminder %}
+
+                    <span class="reminder">
+
+                        🔔 Reminder ON
+
+                    </span>
+
+                    {% endif %}
+
+
+                    <span class="status">
+
+                        {{ task.status }}
+
+                    </span>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    {% if task.status != "Completed" %}
+
+                    <a
+                        href="{{ url_for('complete_task', task_id=task.id) }}"
+                        class="complete-btn">
+
+                        ✓ Complete
+
+                    </a>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{{ url_for('edit_task', task_id=task.id) }}"
+                        class="edit-task-btn">
+
+                        ✏️ Edit
+
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('delete_task', task_id=task.id) }}"
+                        class="task-delete-btn"
+                        onclick="return confirm('Delete this task?');">
+
+                        🗑️ Delete
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="no-tasks">
+
+                <div>
+                    📝
+                </div>
+
+                <h2>
+                    No Tasks Yet
+                </h2>
+
+                <p>
+                    Add your first task above.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

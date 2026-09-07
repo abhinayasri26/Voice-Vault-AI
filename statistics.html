@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Statistics | Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎙️ Voice Vault AI
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="back-btn">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="statistics-container">
+
+    <div class="tasks-header">
+
+        <h1>
+            📊 Dashboard Statistics
+        </h1>
+
+        <p>
+            Your Voice Vault productivity overview
+        </p>
+
+    </div>
+
+
+    <div class="statistics-grid">
+
+        <div class="stat-big">
+
+            <h2>
+                📝
+            </h2>
+
+            <strong>
+                {{ total_notes }}
+            </strong>
+
+            <p>
+                Total Notes
+            </p>
+
+        </div>
+
+
+        <div class="stat-big">
+
+            <h2>
+                📋
+            </h2>
+
+            <strong>
+                {{ total_tasks }}
+            </strong>
+
+            <p>
+                Total Tasks
+            </p>
+
+        </div>
+
+
+        <div class="stat-big">
+
+            <h2>
+                ⏳
+            </h2>
+
+            <strong>
+                {{ pending }}
+            </strong>
+
+            <p>
+                Pending Tasks
+            </p>
+
+        </div>
+
+
+        <div class="stat-big">
+
+            <h2>
+                ☑️
+            </h2>
+
+            <strong>
+                {{ completed }}
+            </strong>
+
+            <p>
+                Completed Tasks
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="statistics-section">
+
+        <h2>
+            🏷️ Notes by Category
+        </h2>
+
+        {% if category_counts %}
+
+            {% for category, count in category_counts.items() %}
+
+            <div class="progress-row">
+
+                <span>
+                    {{ category }}
+                </span>
+
+                <strong>
+                    {{ count }}
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No category data yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="statistics-section">
+
+        <h2>
+            ⚡ Tasks by Priority
+        </h2>
+
+        {% if priority_counts %}
+
+            {% for priority, count in priority_counts.items() %}
+
+            <div class="progress-row">
+
+                <span>
+                    {{ priority }}
+                </span>
+
+                <strong>
+                    {{ count }}
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No task data yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

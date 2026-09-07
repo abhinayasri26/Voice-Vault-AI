@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Voice Vault AI - Dashboard</title>
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🎙️ Voice Vault AI
+        </div>
+
+        <div class="nav-right">
+
+            <span class="welcome-user">
+                Welcome, {{ user_name }}
+            </span>
+
+            <!-- DARK MODE BUTTON -->
+            <button
+                onclick="toggleDarkMode()"
+                class="dark-btn"
+                id="darkModeBtn"
+                title="Toggle Dark Mode">
+
+                🌙
+
+            </button>
+
+            <!-- LOGOUT -->
+            <a href="{{ url_for('logout') }}"
+               class="logout-btn">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <main class="dashboard-container">
+
+        <section class="welcome-section">
+
+            <h1>
+                Welcome to Voice Vault AI 👋
+            </h1>
+
+            <p>
+                Record, organize and manage your voice notes intelligently.
+            </p>
+
+        </section>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="success-message">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- ================= CARDS ================= -->
+
+        <section class="cards">
+
+
+            <!-- RECORD -->
+
+            <div class="card record-card">
+
+                <div class="card-icon">
+                    🎙️
+                </div>
+
+                <h2>
+                    Record Voice
+                </h2>
+
+                <p>
+                    Record your voice and convert your thoughts
+                    into organized notes.
+                </p>
+
+                <a href="{{ url_for('record') }}"
+                   class="card-btn">
+
+                    Start Recording
+
+                </a>
+
+            </div>
+
+
+            <!-- NOTES -->
+
+            <div class="card notes-card">
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+                <h2>
+                    My Notes
+                </h2>
+
+                <p>
+                    View, manage, edit and delete all your
+                    saved voice notes.
+                </p>
+
+                <a href="{{ url_for('notes') }}"
+                   class="card-btn">
+
+                    View Notes
+
+                </a>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="card search-card">
+
+                <div class="card-icon">
+                    🔍
+                </div>
+
+                <h2>
+                    Smart Search
+                </h2>
+
+                <p>
+                    Quickly search your notes using keywords,
+                    title or category.
+                </p>
+
+                <a href="{{ url_for('search') }}"
+                   class="card-btn">
+
+                    Search Notes
+
+                </a>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- MAIN JAVASCRIPT -->
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

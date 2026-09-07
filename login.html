@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Voice Vault AI - Login</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body class="auth-body">
+
+    <div class="auth-container">
+
+        <div class="auth-box">
+
+            <!-- Logo -->
+            <div class="auth-icon">
+                🎙️
+            </div>
+
+            <!-- Heading -->
+            <h1>Voice Vault AI</h1>
+
+            <p>Your intelligent voice information vault</p>
+
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+
+                    {% for message in messages %}
+
+                        <div class="message">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- Login Form -->
+            <form method="POST"
+                  action="{{ url_for('login') }}">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    class="auth-btn">
+
+                    🔐 Login
+
+                </button>
+
+            </form>
+
+
+            <!-- Register -->
+            <div class="auth-link">
+
+                <p>Don't have an account?</p>
+
+                <a href="{{ url_for('register') }}">
+                    Create New Account
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Search | Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎙️ Voice Vault AI
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="back-btn">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="search-container">
+
+    <h1>
+        🔍 Smart Search
+    </h1>
+
+    <p>
+        Search title, content, category, keywords or summary
+    </p>
+
+
+    <form
+        method="POST"
+        class="search-form">
+
+        <input
+            type="text"
+            name="query"
+            value="{{ search_query }}"
+            placeholder="Search your notes..."
+            required
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+
+    {% if search_query %}
+
+    <h2 class="result-title">
+
+        Results for:
+        <span>
+            {{ search_query }}
+        </span>
+
+    </h2>
+
+    {% endif %}
+
+
+    {% if results %}
+
+    <div class="notes-grid">
+
+        {% for note in results %}
+
+        <div class="note-card">
+
+            <div class="note-icon">
+                📝
+            </div>
+
+            <h2>
+                {{ note.title }}
+            </h2>
+
+            <p class="note-content">
+                {{ note.summary or note.content[:150] }}
+            </p>
+
+            <div class="note-details">
+
+                <span>
+                    🏷️ {{ note.category }}
+                </span>
+
+                <span>
+                    ⚡ {{ note.priority }}
+                </span>
+
+            </div>
+
+            <a
+                href="{{ url_for('view_note', note_id=note.id) }}"
+                class="view-btn">
+
+                View Note
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% elif search_query %}
+
+    <div class="empty-box">
+
+        <div class="empty-icon">
+            🔍
+        </div>
+
+        <h2>
+            No Results Found
+        </h2>
+
+        <p>
+            Try another keyword.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

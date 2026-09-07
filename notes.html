@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Notes | Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎙️ Voice Vault AI
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="back-btn">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="notes-container">
+
+    <h1>
+        📁 My Voice Notes
+    </h1>
+
+    <p>
+        AI analyzed notes from your recordings
+    </p>
+
+
+    {% if notes %}
+
+    <div class="notes-grid">
+
+        {% for note in notes %}
+
+        <div class="note-card">
+
+            <div class="note-icon">
+                📝
+            </div>
+
+            <h2>
+                {{ note.title }}
+            </h2>
+
+
+            <p class="note-content">
+                {{ note.summary or note.content[:150] }}
+            </p>
+
+
+            <div class="note-details">
+
+                <span>
+                    🏷️ {{ note.category }}
+                </span>
+
+                <span>
+                    ⚡ {{ note.priority }}
+                </span>
+
+            </div>
+
+
+            {% if note.keywords %}
+
+            <div class="keywords-box">
+
+                🔑 {{ note.keywords }}
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="note-actions">
+
+                <a
+                    href="{{ url_for('view_note', note_id=note.id) }}"
+                    class="view-btn">
+
+                    View
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('delete_note', note_id=note.id) }}"
+                    class="delete-btn"
+                    onclick="return confirm('Delete this note?');">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+
+        <div class="empty-icon">
+            📝
+        </div>
+
+        <h2>
+            No Notes Yet
+        </h2>
+
+        <p>
+            Start recording your first voice note.
+        </p>
+
+        <a
+            href="{{ url_for('record') }}"
+            class="card-btn">
+
+            Record Voice
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

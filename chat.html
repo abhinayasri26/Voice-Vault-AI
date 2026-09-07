@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Chat | Voice Vault AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎙️ Voice Vault AI
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="back-btn">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="chat-container">
+
+    <div class="chat-header">
+
+        <div class="chat-icon">
+            🧠
+        </div>
+
+        <h1>
+            AI Chat with Your Notes
+        </h1>
+
+        <p>
+            Ask questions about your saved voice notes.
+        </p>
+
+    </div>
+
+
+    <form
+        method="POST"
+        class="chat-form">
+
+        <input
+            type="text"
+            name="question"
+            value="{{ question }}"
+            placeholder="Example: What did I discuss about Python?"
+            required
+        >
+
+        <button type="submit">
+            Ask AI
+        </button>
+
+    </form>
+
+
+    {% if answer %}
+
+    <div class="chat-answer">
+
+        <h2>
+            🤖 Voice Vault AI
+        </h2>
+
+        <div class="answer-text">
+            {{ answer }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <div class="chat-examples">
+
+        <h3>
+            Try asking:
+        </h3>
+
+        <p>
+            • What did I discuss about Python?
+        </p>
+
+        <p>
+            • What did I discuss about project?
+        </p>
+
+        <p>
+            • Tell me about my ML notes.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
